@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bulk Extension Fixer</title>
+</head>
+<body>
+
+<h2>Bulk Extension Fixer</h2>
+
+<form method="post" enctype="multipart/form-data">
+    
+    <label>Select Files:</label><br><br>
+    <input type="file" name="files" multiple required>
+    <br><br>
+
+    <label>Convert To Extension:</label><br><br>
+    <select name="ext" required>
+        <option value=".jpg">.jpg</option>
+        <option value=".png">.png</option>
+        <option value=".pdf">.pdf</option>
+        <option value=".txt">.txt</option>
+        <option value=".jpeg">.jpeg</option>
+        <option value=".webp">.webp</option>
+    </select>
+
+    <br><br>
+    <button type="submit">Run</button>
+</form>
+
+
+{% if zip_file %}
+<hr>
+<h3>Download Converted Files</h3>
+<a href="/download/{{ zip_file }}">
+    Download ZIP
+</a>
+{% endif %}
+
+
+<br><br>
+<a href="/">⬅ Back to Dashboard</a>
+
+</body>
+</html>
+

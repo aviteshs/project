@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bulk File Renamer</title>
+</head>
+<body>
+
+<h2>Bulk File Renamer</h2>
+
+<form method="post" enctype="multipart/form-data">
+
+    <label>Select Files:</label><br>
+    <input type="file" name="files" multiple required><br><br>
+
+    <label>Prefix:</label><br>
+    <input type="text" name="prefix" placeholder="INV_"><br><br>
+
+    <label>Suffix:</label><br>
+    <input type="text" name="suffix" placeholder="_2026"><br><br>
+
+    <label>
+        <input type="checkbox" name="numbering"> Enable Auto Numbering
+    </label><br><br>
+
+    <button type="submit">Run</button>
+</form>
+
+{% if zip_file %}
+<hr>
+<h3>Download Renamed Files</h3>
+<a href="/download/{{ zip_file }}">Download ZIP</a>
+{% endif %}
+
+<br><br>
+<a href="/">⬅ Back to Dashboard</a>
+
+</body>
+</html>
