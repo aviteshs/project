@@ -2,4 +2,10 @@ venv/
 __pycache__/
 uploads/
 outputs/
+devops-key.pem
+terraform.tfstate
+terraform.tfstate.backup
+.terraform
+
+
 .env
