@@ -24,13 +24,13 @@ jobs:
           docker stop mycontainer || true
           docker rm mycontainer || true
 
-          sudo rm -rf /project
+          rm -rf /home/ubuntu/project
 
-          cd /
+          cd /home/ubuntu
 
           git clone https://github.com/aviteshs/project.git
 
-          cd /project
+          cd /home/ubuntu/project
 
           docker build --no-cache -t myapp .
 
