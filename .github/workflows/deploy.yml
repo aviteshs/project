@@ -21,13 +21,17 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
 
         script: |
-          cd /project
-
-          git pull
-
           docker stop mycontainer || true
           docker rm mycontainer || true
 
-          docker build -t myapp .
+          sudo rm -rf /project
+
+          cd /
+
+          git clone https://github.com/aviteshs/project.git
+
+          cd /project
+
+          docker build --no-cache -t myapp .
 
           docker run -d -p 5000:5000 --name mycontainer myapp
