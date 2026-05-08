@@ -1,41 +1,197 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Large File Sharing</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body{
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            min-height:100vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            color:white;
+            padding:20px;
+        }
+
+        .container{
+            width:100%;
+            max-width:650px;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            border:1px solid rgba(255,255,255,0.1);
+            border-radius:20px;
+            padding:35px;
+            box-shadow:0 8px 30px rgba(0,0,0,0.4);
+        }
+
+        h2{
+            text-align:center;
+            margin-bottom:25px;
+            font-size:32px;
+            color:#38bdf8;
+        }
+
+        .subtitle{
+            text-align:center;
+            color:#cbd5e1;
+            margin-bottom:30px;
+            font-size:15px;
+        }
+
+        input[type="file"]{
+            width:100%;
+            padding:18px;
+            border:2px dashed #38bdf8;
+            border-radius:15px;
+            background: rgba(255,255,255,0.05);
+            color:white;
+            cursor:pointer;
+        }
+
+        button{
+            width:100%;
+            margin-top:20px;
+            padding:15px;
+            border:none;
+            border-radius:12px;
+            background: linear-gradient(90deg, #38bdf8, #0ea5e9);
+            color:white;
+            font-size:18px;
+            font-weight:bold;
+            cursor:pointer;
+            transition:0.3s;
+        }
+
+        button:hover{
+            transform:translateY(-2px);
+            box-shadow:0 5px 20px rgba(56,189,248,0.5);
+        }
+
+        .result{
+            margin-top:30px;
+            padding:20px;
+            border-radius:15px;
+            background: rgba(255,255,255,0.05);
+            border:1px solid rgba(255,255,255,0.08);
+        }
+
+        .result p{
+            margin-bottom:12px;
+        }
+
+        .link-box{
+            width:100%;
+            padding:12px;
+            border:none;
+            border-radius:10px;
+            background:#0f172a;
+            color:#38bdf8;
+            font-size:15px;
+        }
+
+        .expiry{
+            color:#f87171;
+            font-weight:bold;
+        }
+
+        .share-buttons{
+            display:flex;
+            gap:15px;
+            margin-top:20px;
+            flex-wrap:wrap;
+        }
+
+        .share-buttons a{
+            flex:1;
+            text-align:center;
+            padding:12px;
+            border-radius:10px;
+            text-decoration:none;
+            color:white;
+            font-weight:bold;
+            transition:0.3s;
+        }
+
+        .whatsapp{
+            background:#22c55e;
+        }
+
+        .email{
+            background:#6366f1;
+        }
+
+        .share-buttons a:hover{
+            transform:scale(1.03);
+            opacity:0.9;
+        }
+
+        .back{
+            display:block;
+            margin-top:30px;
+            text-align:center;
+            text-decoration:none;
+            color:#cbd5e1;
+        }
+
+        .back:hover{
+            color:#38bdf8;
+        }
+    </style>
 </head>
 <body>
 
-<h2>File Sharing (Up to 2GB)</h2>
+<div class="container">
 
-<form method="post" enctype="multipart/form-data">
-    <input type="file" name="files" multiple required>
-    <br><br>
-    <button type="submit">Upload & Generate Link</button>
-</form>
+    <h2>🚀 Large File Sharing</h2>
+    <p class="subtitle">Upload files up to 2GB and generate a secure shareable link.</p>
 
-{% if link %}
-<hr>
+    <form method="post" enctype="multipart/form-data">
+        <input type="file" name="files" multiple required>
+        <button type="submit">Upload & Generate Link</button>
+    </form>
 
-<p><b>Download link (expires in 7 days):</b></p>
-<input type="text" value="{{ link }}" style="width: 420px;" readonly>
+    {% if link %}
+    <div class="result">
 
-<p style="color:red;">This link will expire on {{ expiry }}</p>
+        <p><b>🔗 Download Link:</b></p>
 
-<br>
+        <input type="text" value="{{ link }}" class="link-box" readonly>
 
-<a href="https://wa.me/?text={{ link }}" target="_blank">
-    Share on WhatsApp
-</a>
+        <p class="expiry">
+            ⏳ This link will expire on {{ expiry }}
+        </p>
 
-<br><br>
+        <div class="share-buttons">
 
-<a href="mailto:?subject=File Download Link&body=Download here: {{ link }}">
-    Share via Email
-</a>
-{% endif %}
+            <a class="whatsapp"
+               href="https://wa.me/?text={{ link }}"
+               target="_blank">
+               WhatsApp
+            </a>
 
-<br><br>
-<a href="/">Back to Dashboard</a>
+            <a class="email"
+               href="mailto:?subject=File Download Link&body=Download here: {{ link }}">
+               Email
+            </a>
+
+        </div>
+
+    </div>
+    {% endif %}
+
+    <a href="/" class="back">⬅ Back to Dashboard</a>
+
+</div>
 
 </body>
 </html>
