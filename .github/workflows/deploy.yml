@@ -21,8 +21,8 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
 
         script: |
-          docker stop mycontainer || true
-          docker rm mycontainer || true
+          sudo docker stop mycontainer || true
+          sudo docker rm mycontainer || true
 
           rm -rf /home/ubuntu/project
 
@@ -32,6 +32,6 @@ jobs:
 
           cd /home/ubuntu/project
 
-          docker build --no-cache -t myapp .
+          sudo docker build --no-cache -t myapp .
 
-          docker run -d -p 5000:5000 --name mycontainer myapp
+          sudo docker run -d -p 5000:5000 --name mycontainer myapp
