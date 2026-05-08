@@ -1,255 +1,523 @@
+# Modern File Sharing UI (2026 Style)
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Large File Sharing</title>
+    <title>CloudDrop - File Sharing</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
     <style>
+
         *{
             margin:0;
             padding:0;
             box-sizing:border-box;
-            font-family: Arial, sans-serif;
+            font-family:'Inter', sans-serif;
         }
 
         body{
-            background: linear-gradient(135deg, #0f172a, #1e293b);
             min-height:100vh;
+            background:
+                radial-gradient(circle at top left,#2563eb 0%,transparent 30%),
+                radial-gradient(circle at bottom right,#7c3aed 0%,transparent 30%),
+                #020617;
             display:flex;
-            justify-content:center;
             align-items:center;
-            color:white;
+            justify-content:center;
             padding:20px;
+            overflow-x:hidden;
+            color:white;
         }
 
-        .container{
+        .card{
             width:100%;
-            max-width:650px;
-            background: rgba(255,255,255,0.08);
-            backdrop-filter: blur(10px);
-            border:1px solid rgba(255,255,255,0.1);
-            border-radius:20px;
+            max-width:760px;
+            background:rgba(15,23,42,0.72);
+            border:1px solid rgba(255,255,255,0.08);
+            backdrop-filter:blur(18px);
+            border-radius:30px;
             padding:35px;
-            box-shadow:0 8px 30px rgba(0,0,0,0.4);
+            box-shadow:
+                0 20px 80px rgba(0,0,0,0.55),
+                inset 0 1px 1px rgba(255,255,255,0.06);
+            position:relative;
+            overflow:hidden;
         }
 
-        h2{
-            text-align:center;
-            margin-bottom:25px;
-            font-size:32px;
-            color:#38bdf8;
+        .glow{
+            position:absolute;
+            width:250px;
+            height:250px;
+            background:#2563eb;
+            filter:blur(120px);
+            opacity:0.2;
+            top:-80px;
+            right:-80px;
+        }
+
+        h1{
+            font-size:38px;
+            font-weight:700;
+            margin-bottom:10px;
+            background:linear-gradient(to right,#60a5fa,#c084fc);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
         }
 
         .subtitle{
-            text-align:center;
             color:#cbd5e1;
             margin-bottom:30px;
             font-size:15px;
+            line-height:1.6;
+        }
+
+        .upload-box{
+            border:2px dashed rgba(96,165,250,0.45);
+            border-radius:24px;
+            padding:45px 25px;
+            text-align:center;
+            background:rgba(255,255,255,0.03);
+            transition:0.3s ease;
+            cursor:pointer;
+            position:relative;
+        }
+
+        .upload-box:hover{
+            border-color:#60a5fa;
+            background:rgba(96,165,250,0.05);
+            transform:translateY(-2px);
+        }
+
+        .upload-box i{
+            font-size:58px;
+            margin-bottom:18px;
+            color:#60a5fa;
+        }
+
+        .upload-box h3{
+            font-size:22px;
+            margin-bottom:10px;
+        }
+
+        .upload-box p{
+            color:#94a3b8;
+            font-size:14px;
         }
 
         input[type="file"]{
+            position:absolute;
+            inset:0;
             width:100%;
-            padding:18px;
-            border:2px dashed #38bdf8;
-            border-radius:15px;
-            background: rgba(255,255,255,0.05);
-            color:white;
+            height:100%;
+            opacity:0;
             cursor:pointer;
         }
 
-        button{
-            width:100%;
+        .selected-files{
             margin-top:20px;
-            padding:15px;
-            border:none;
-            border-radius:12px;
-            background: linear-gradient(90deg, #38bdf8, #0ea5e9);
-            color:white;
-            font-size:18px;
-            font-weight:bold;
-            cursor:pointer;
-            transition:0.3s;
+            display:flex;
+            flex-direction:column;
+            gap:10px;
         }
 
-        button:hover{
-            transform:translateY(-2px);
-            box-shadow:0 5px 20px rgba(56,189,248,0.5);
+        .file-item{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:14px 16px;
+            background:rgba(255,255,255,0.04);
+            border:1px solid rgba(255,255,255,0.05);
+            border-radius:16px;
+            color:#e2e8f0;
+            font-size:14px;
         }
 
-        /* Progress Bar */
-        .progress-container{
+        .upload-btn{
             width:100%;
-            background:#1e293b;
-            border-radius:20px;
-            overflow:hidden;
-            margin-top:25px;
+            border:none;
+            margin-top:28px;
+            padding:18px;
+            border-radius:18px;
+            font-size:17px;
+            font-weight:700;
+            cursor:pointer;
+            color:white;
+            background:linear-gradient(to right,#2563eb,#7c3aed);
+            transition:0.3s ease;
+            box-shadow:0 10px 35px rgba(99,102,241,0.35);
+        }
+
+        .upload-btn:hover{
+            transform:translateY(-2px) scale(1.01);
+        }
+
+        .progress-wrapper{
+            margin-top:28px;
             display:none;
-            border:1px solid rgba(255,255,255,0.1);
+        }
+
+        .progress-top{
+            display:flex;
+            justify-content:space-between;
+            margin-bottom:10px;
+            color:#cbd5e1;
+            font-size:14px;
         }
 
         .progress-bar{
-            height:28px;
+            width:100%;
+            height:18px;
+            border-radius:50px;
+            overflow:hidden;
+            background:rgba(255,255,255,0.08);
+            position:relative;
+        }
+
+        .progress-fill{
             width:0%;
-            background: linear-gradient(90deg,#22c55e,#16a34a);
-            text-align:center;
-            line-height:28px;
-            color:white;
-            font-weight:bold;
-            transition: width 0.2s;
+            height:100%;
+            border-radius:50px;
+            background:linear-gradient(to right,#22c55e,#06b6d4);
+            transition:width 0.2s ease;
+            position:relative;
+        }
+
+        .progress-fill::after{
+            content:'';
+            position:absolute;
+            top:0;
+            left:-40px;
+            width:40px;
+            height:100%;
+            background:rgba(255,255,255,0.5);
+            filter:blur(10px);
+            animation:shine 1s linear infinite;
+        }
+
+        @keyframes shine{
+            from{left:-40px;}
+            to{left:100%;}
         }
 
         .result{
-            margin-top:30px;
-            padding:20px;
-            border-radius:15px;
-            background: rgba(255,255,255,0.05);
+            margin-top:35px;
+            padding:28px;
+            border-radius:24px;
+            background:rgba(255,255,255,0.04);
             border:1px solid rgba(255,255,255,0.08);
         }
 
-        .result p{
-            margin-bottom:12px;
-        }
-
-        .link-box{
-            width:100%;
-            padding:12px;
-            border:none;
-            border-radius:10px;
-            background:#0f172a;
-            color:#38bdf8;
-            font-size:15px;
-        }
-
-        .expiry{
-            color:#f87171;
-            font-weight:bold;
-        }
-
-        .share-buttons{
+        .result-title{
             display:flex;
-            gap:15px;
-            margin-top:20px;
+            align-items:center;
+            gap:10px;
+            margin-bottom:18px;
+            font-size:20px;
+            font-weight:600;
+        }
+
+        .link-container{
+            display:flex;
+            gap:12px;
             flex-wrap:wrap;
         }
 
-        .share-buttons a{
+        .link-box{
             flex:1;
-            text-align:center;
-            padding:12px;
-            border-radius:10px;
+            min-width:200px;
+            background:#020617;
+            border:1px solid rgba(255,255,255,0.06);
+            color:#60a5fa;
+            padding:16px;
+            border-radius:16px;
+            outline:none;
+            font-size:14px;
+        }
+
+        .copy-btn{
+            border:none;
+            background:#16a34a;
+            color:white;
+            padding:16px 22px;
+            border-radius:16px;
+            cursor:pointer;
+            font-weight:600;
+            transition:0.25s;
+        }
+
+        .copy-btn:hover{
+            transform:scale(1.04);
+        }
+
+        .expiry{
+            margin-top:16px;
+            color:#fca5a5;
+            font-size:14px;
+        }
+
+        .share-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+            gap:14px;
+            margin-top:24px;
+        }
+
+        .share-btn{
             text-decoration:none;
             color:white;
-            font-weight:bold;
-            transition:0.3s;
+            text-align:center;
+            padding:15px;
+            border-radius:18px;
+            font-weight:600;
+            transition:0.25s;
         }
 
-        .whatsapp{
-            background:#22c55e;
+        .share-btn:hover{
+            transform:translateY(-2px);
         }
 
-        .email{
-            background:#6366f1;
-        }
+        .whatsapp{background:#16a34a;}
+        .email{background:#4f46e5;}
+        .telegram{background:#0284c7;}
+        .download{background:#ea580c;}
 
-        .share-buttons a:hover{
-            transform:scale(1.03);
-            opacity:0.9;
-        }
-
-        .back{
-            display:block;
+        .bottom-text{
             margin-top:30px;
             text-align:center;
-            text-decoration:none;
-            color:#cbd5e1;
+            color:#94a3b8;
+            font-size:13px;
         }
 
-        .back:hover{
-            color:#38bdf8;
+        @media(max-width:600px){
+
+            .card{
+                padding:24px;
+            }
+
+            h1{
+                font-size:30px;
+            }
+
+            .upload-box{
+                padding:35px 18px;
+            }
+
         }
+
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="card">
 
-    <h2>🚀 Large File Sharing</h2>
+    <div class="glow"></div>
+
+    <h1>☁ CloudDrop</h1>
+
     <p class="subtitle">
-        Upload files up to 2GB and generate a secure shareable link.
+        Fast & secure large file sharing platform with modern upload tracking,
+        instant sharing and smart link management.
     </p>
 
-    <!-- FORM -->
-    <form id="uploadForm" method="post" enctype="multipart/form-data">
+    <form id="uploadForm" method="POST" enctype="multipart/form-data">
 
-        <input type="file" name="files" multiple required>
+        <label class="upload-box">
 
-        <button type="submit">Upload & Generate Link</button>
+            <i class="fa-solid fa-cloud-arrow-up"></i>
 
-        <!-- Progress Bar -->
-        <div class="progress-container" id="progressContainer">
-            <div class="progress-bar" id="progressBar">0%</div>
+            <h3>Drag & Drop Files</h3>
+
+            <p>Upload multiple files up to 2GB</p>
+
+            <input type="file" id="fileInput" name="files" multiple required>
+
+        </label>
+
+        <!-- Selected Files -->
+        <div class="selected-files" id="selectedFiles"></div>
+
+        <!-- Upload Button -->
+        <button type="submit" class="upload-btn">
+            <i class="fa-solid fa-bolt"></i>
+            Upload & Generate Secure Link
+        </button>
+
+        <!-- Progress -->
+        <div class="progress-wrapper" id="progressWrapper">
+
+            <div class="progress-top">
+                <span>Uploading...</span>
+                <span id="progressPercent">0%</span>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
         </div>
 
     </form>
 
     {% if link %}
+
     <div class="result">
 
-        <p><b>🔗 Download Link:</b></p>
+        <div class="result-title">
+            <i class="fa-solid fa-link"></i>
+            Shareable Download Link
+        </div>
 
-        <input type="text" value="{{ link }}" class="link-box" readonly>
+        <div class="link-container">
 
-        <p class="expiry">
+            <input type="text"
+                   value="{{ link }}"
+                   id="linkBox"
+                   class="link-box"
+                   readonly>
+
+            <button class="copy-btn" onclick="copyLink()" type="button">
+                <i class="fa-solid fa-copy"></i>
+                Copy
+            </button>
+
+        </div>
+
+        <div class="expiry">
             ⏳ This link will expire on {{ expiry }}
-        </p>
+        </div>
 
-        <div class="share-buttons">
+        <div class="share-grid">
 
-            <a class="whatsapp"
+            <a class="share-btn whatsapp"
                href="https://wa.me/?text={{ link }}"
                target="_blank">
-               WhatsApp
+                <i class="fa-brands fa-whatsapp"></i>
+                WhatsApp
             </a>
 
-            <a class="email"
+            <a class="share-btn email"
                href="mailto:?subject=File Download Link&body=Download here: {{ link }}">
-               Email
+                <i class="fa-solid fa-envelope"></i>
+                Email
+            </a>
+
+            <a class="share-btn telegram"
+               href="https://t.me/share/url?url={{ link }}"
+               target="_blank">
+                <i class="fa-brands fa-telegram"></i>
+                Telegram
+            </a>
+
+            <a class="share-btn download"
+               href="{{ link }}"
+               target="_blank">
+                <i class="fa-solid fa-download"></i>
+                Download
             </a>
 
         </div>
 
     </div>
+
     {% endif %}
 
-    <a href="/" class="back">⬅ Back to Dashboard</a>
+    <div class="bottom-text">
+        🔒 End-to-End Secure • ⚡ Fast Transfer • ☁ Cloud Storage
+    </div>
 
 </div>
 
 <script>
-    const form = document.getElementById("uploadForm");
-    const progressContainer = document.getElementById("progressContainer");
-    const progressBar = document.getElementById("progressBar");
 
-    form.addEventListener("submit", function(){
+    const fileInput = document.getElementById('fileInput');
+    const selectedFiles = document.getElementById('selectedFiles');
 
-        progressContainer.style.display = "block";
+    fileInput.addEventListener('change', () => {
+
+        selectedFiles.innerHTML = '';
+
+        [...fileInput.files].forEach(file => {
+
+            const size = (file.size / (1024 * 1024)).toFixed(2);
+
+            const div = document.createElement('div');
+
+            div.classList.add('file-item');
+
+            div.innerHTML = `
+                <span>
+                    <i class="fa-solid fa-file"></i>
+                    ${file.name}
+                </span>
+
+                <span>${size} MB</span>
+            `;
+
+            selectedFiles.appendChild(div);
+
+        });
+
+    });
+
+
+    // Fake Upload Progress Animation
+
+    const form = document.getElementById('uploadForm');
+    const progressWrapper = document.getElementById('progressWrapper');
+    const progressFill = document.getElementById('progressFill');
+    const progressPercent = document.getElementById('progressPercent');
+
+    form.addEventListener('submit', function(){
+
+        progressWrapper.style.display = 'block';
 
         let progress = 0;
 
         const interval = setInterval(() => {
 
+            progress += Math.floor(Math.random() * 8) + 1;
+
             if(progress >= 100){
+                progress = 100;
                 clearInterval(interval);
-            } else {
-                progress += 1;
-                progressBar.style.width = progress + "%";
-                progressBar.innerText = progress + "%";
             }
 
-        }, 100);
+            progressFill.style.width = progress + '%';
+            progressPercent.innerText = progress + '%';
+
+        }, 180);
 
     });
+
+
+    // Copy Link
+
+    function copyLink(){
+
+        const linkBox = document.getElementById('linkBox');
+
+        navigator.clipboard.writeText(linkBox.value);
+
+        const btn = document.querySelector('.copy-btn');
+
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
+
+        setTimeout(() => {
+            btn.innerHTML = '<i class="fa-solid fa-copy"></i> Copy';
+        }, 2000);
+
+    }
+
 </script>
 
 </body>
