@@ -77,6 +77,28 @@
             box-shadow:0 5px 20px rgba(56,189,248,0.5);
         }
 
+        /* Progress Bar */
+        .progress-container{
+            width:100%;
+            background:#1e293b;
+            border-radius:20px;
+            overflow:hidden;
+            margin-top:25px;
+            display:none;
+            border:1px solid rgba(255,255,255,0.1);
+        }
+
+        .progress-bar{
+            height:28px;
+            width:0%;
+            background: linear-gradient(90deg,#22c55e,#16a34a);
+            text-align:center;
+            line-height:28px;
+            color:white;
+            font-weight:bold;
+            transition: width 0.2s;
+        }
+
         .result{
             margin-top:30px;
             padding:20px;
@@ -153,11 +175,22 @@
 <div class="container">
 
     <h2>🚀 Large File Sharing</h2>
-    <p class="subtitle">Uploads files up to 2GB and generate a secure shareable link.</p>
+    <p class="subtitle">
+        Upload files up to 2GB and generate a secure shareable link.
+    </p>
 
-    <form method="post" enctype="multipart/form-data">
+    <!-- FORM -->
+    <form id="uploadForm" method="post" enctype="multipart/form-data">
+
         <input type="file" name="files" multiple required>
+
         <button type="submit">Upload & Generate Link</button>
+
+        <!-- Progress Bar -->
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar" id="progressBar">0%</div>
+        </div>
+
     </form>
 
     {% if link %}
@@ -192,6 +225,32 @@
     <a href="/" class="back">⬅ Back to Dashboard</a>
 
 </div>
+
+<script>
+    const form = document.getElementById("uploadForm");
+    const progressContainer = document.getElementById("progressContainer");
+    const progressBar = document.getElementById("progressBar");
+
+    form.addEventListener("submit", function(){
+
+        progressContainer.style.display = "block";
+
+        let progress = 0;
+
+        const interval = setInterval(() => {
+
+            if(progress >= 100){
+                clearInterval(interval);
+            } else {
+                progress += 1;
+                progressBar.style.width = progress + "%";
+                progressBar.innerText = progress + "%";
+            }
+
+        }, 100);
+
+    });
+</script>
 
 </body>
 </html>
