@@ -1,41 +1,522 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Large File Sharing</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudDrop - File Sharing</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Inter', sans-serif;
+        }
+
+        body{
+            min-height:100vh;
+            background:
+                radial-gradient(circle at top left,#2563eb 0%,transparent 30%),
+                radial-gradient(circle at bottom right,#7c3aed 0%,transparent 30%),
+                #020617;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:20px;
+            overflow-x:hidden;
+            color:white;
+        }
+
+        .card{
+            width:100%;
+            max-width:760px;
+            background:rgba(15,23,42,0.72);
+            border:1px solid rgba(255,255,255,0.08);
+            backdrop-filter:blur(18px);
+            border-radius:30px;
+            padding:35px;
+            box-shadow:
+                0 20px 80px rgba(0,0,0,0.55),
+                inset 0 1px 1px rgba(255,255,255,0.06);
+            position:relative;
+            overflow:hidden;
+        }
+
+        .glow{
+            position:absolute;
+            width:250px;
+            height:250px;
+            background:#2563eb;
+            filter:blur(120px);
+            opacity:0.2;
+            top:-80px;
+            right:-80px;
+        }
+
+        h1{
+            font-size:38px;
+            font-weight:700;
+            margin-bottom:10px;
+            background:linear-gradient(to right,#60a5fa,#c084fc);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent;
+        }
+
+        .subtitle{
+            color:#cbd5e1;
+            margin-bottom:30px;
+            font-size:15px;
+            line-height:1.6;
+        }
+
+        .upload-box{
+            border:2px dashed rgba(96,165,250,0.45);
+            border-radius:24px;
+            padding:45px 25px;
+            text-align:center;
+            background:rgba(255,255,255,0.03);
+            transition:0.3s ease;
+            cursor:pointer;
+            position:relative;
+        }
+
+        .upload-box:hover{
+            border-color:#60a5fa;
+            background:rgba(96,165,250,0.05);
+            transform:translateY(-2px);
+        }
+
+        .upload-box i{
+            font-size:58px;
+            margin-bottom:18px;
+            color:#60a5fa;
+        }
+
+        .upload-box h3{
+            font-size:22px;
+            margin-bottom:10px;
+        }
+
+        .upload-box p{
+            color:#94a3b8;
+            font-size:14px;
+        }
+
+        input[type="file"]{
+            position:absolute;
+            inset:0;
+            width:100%;
+            height:100%;
+            opacity:0;
+            cursor:pointer;
+        }
+
+        .selected-files{
+            margin-top:20px;
+            display:flex;
+            flex-direction:column;
+            gap:10px;
+        }
+
+        .file-item{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:14px 16px;
+            background:rgba(255,255,255,0.04);
+            border:1px solid rgba(255,255,255,0.05);
+            border-radius:16px;
+            color:#e2e8f0;
+            font-size:14px;
+        }
+
+        .upload-btn{
+            width:100%;
+            border:none;
+            margin-top:28px;
+            padding:18px;
+            border-radius:18px;
+            font-size:17px;
+            font-weight:700;
+            cursor:pointer;
+            color:white;
+            background:linear-gradient(to right,#2563eb,#7c3aed);
+            transition:0.3s ease;
+            box-shadow:0 10px 35px rgba(99,102,241,0.35);
+        }
+
+        .upload-btn:hover{
+            transform:translateY(-2px) scale(1.01);
+        }
+
+        .progress-wrapper{
+            margin-top:28px;
+            display:none;
+        }
+
+        .progress-top{
+            display:flex;
+            justify-content:space-between;
+            margin-bottom:10px;
+            color:#cbd5e1;
+            font-size:14px;
+        }
+
+        .progress-bar{
+            width:100%;
+            height:18px;
+            border-radius:50px;
+            overflow:hidden;
+            background:rgba(255,255,255,0.08);
+            position:relative;
+        }
+
+        .progress-fill{
+            width:0%;
+            height:100%;
+            border-radius:50px;
+            background:linear-gradient(to right,#22c55e,#06b6d4);
+            transition:width 0.2s ease;
+            position:relative;
+        }
+
+        .progress-fill::after{
+            content:'';
+            position:absolute;
+            top:0;
+            left:-40px;
+            width:40px;
+            height:100%;
+            background:rgba(255,255,255,0.5);
+            filter:blur(10px);
+            animation:shine 1s linear infinite;
+        }
+
+        @keyframes shine{
+            from{left:-40px;}
+            to{left:100%;}
+        }
+
+        .result{
+            margin-top:35px;
+            padding:28px;
+            border-radius:24px;
+            background:rgba(255,255,255,0.04);
+            border:1px solid rgba(255,255,255,0.08);
+        }
+
+        .result-title{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            margin-bottom:18px;
+            font-size:20px;
+            font-weight:600;
+        }
+
+        .link-container{
+            display:flex;
+            gap:12px;
+            flex-wrap:wrap;
+        }
+
+        .link-box{
+            flex:1;
+            min-width:200px;
+            background:#020617;
+            border:1px solid rgba(255,255,255,0.06);
+            color:#60a5fa;
+            padding:16px;
+            border-radius:16px;
+            outline:none;
+            font-size:14px;
+        }
+
+        .copy-btn{
+            border:none;
+            background:#16a34a;
+            color:white;
+            padding:16px 22px;
+            border-radius:16px;
+            cursor:pointer;
+            font-weight:600;
+            transition:0.25s;
+        }
+
+        .copy-btn:hover{
+            transform:scale(1.04);
+        }
+
+        .expiry{
+            margin-top:16px;
+            color:#fca5a5;
+            font-size:14px;
+        }
+
+        .share-grid{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+            gap:14px;
+            margin-top:24px;
+        }
+
+        .share-btn{
+            text-decoration:none;
+            color:white;
+            text-align:center;
+            padding:15px;
+            border-radius:18px;
+            font-weight:600;
+            transition:0.25s;
+        }
+
+        .share-btn:hover{
+            transform:translateY(-2px);
+        }
+
+        .whatsapp{background:#16a34a;}
+        .email{background:#4f46e5;}
+        .telegram{background:#0284c7;}
+        .download{background:#ea580c;}
+
+        .bottom-text{
+            margin-top:30px;
+            text-align:center;
+            color:#94a3b8;
+            font-size:13px;
+        }
+
+        @media(max-width:600px){
+
+            .card{
+                padding:24px;
+            }
+
+            h1{
+                font-size:30px;
+            }
+
+            .upload-box{
+                padding:35px 18px;
+            }
+
+        }
+
+    </style>
 </head>
 <body>
 
-<h2>File Sharing (Up to 2GB)</h2>
+<div class="card">
 
-<form method="post" enctype="multipart/form-data">
-    <input type="file" name="files" multiple required>
-    <br><br>
-    <button type="submit">Upload & Generate Link</button>
-</form>
+    <div class="glow"></div>
 
-{% if link %}
-<hr>
+    <h1>☁ CloudDrop</h1>
 
-<p><b>Download link (expires in 7 days):</b></p>
-<input type="text" value="{{ link }}" style="width: 420px;" readonly>
+    <p class="subtitle">
+        Fast & secure large file sharing platform with modern upload tracking,
+        instant sharing and smart link management.
+    </p>
 
-<p style="color:red;">This link will expire on {{ expiry }}</p>
+    <form id="uploadForm" method="POST" enctype="multipart/form-data">
 
-<br>
+        <label class="upload-box">
 
-<a href="https://wa.me/?text={{ link }}" target="_blank">
-    Share on WhatsApp
-</a>
+            <i class="fa-solid fa-cloud-arrow-up"></i>
 
-<br><br>
+            <h3>Drag & Drop Files</h3>
 
-<a href="mailto:?subject=File Download Link&body=Download here: {{ link }}">
-    Share via Email
-</a>
-{% endif %}
+            <p>Upload multiple files up to 2GB</p>
 
-<br><br>
-<a href="/">Back to Dashboard</a>
+            <input type="file" id="fileInput" name="files" multiple required>
+
+        </label>
+
+        <!-- Selected Files -->
+        <div class="selected-files" id="selectedFiles"></div>
+
+        <!-- Upload Button -->
+        <button type="submit" class="upload-btn">
+            <i class="fa-solid fa-bolt"></i>
+            Upload & Generate Secure Link
+        </button>
+
+        <!-- Progress -->
+        <div class="progress-wrapper" id="progressWrapper">
+
+            <div class="progress-top">
+                <span>Uploading...</span>
+                <span id="progressPercent">0%</span>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+        </div>
+
+    </form>
+
+    {% if link %}
+
+    <div class="result">
+
+        <div class="result-title">
+            <i class="fa-solid fa-link"></i>
+            Shareable Download Link
+        </div>
+
+        <div class="link-container">
+
+            <input type="text"
+                   value="{{ link }}"
+                   id="linkBox"
+                   class="link-box"
+                   readonly>
+
+            <button class="copy-btn" onclick="copyLink()" type="button">
+                <i class="fa-solid fa-copy"></i>
+                Copy
+            </button>
+
+        </div>
+
+        <div class="expiry">
+            ⏳ This link will expire on {{ expiry }}
+        </div>
+
+        <div class="share-grid">
+
+            <a class="share-btn whatsapp"
+               href="https://wa.me/?text={{ link }}"
+               target="_blank">
+                <i class="fa-brands fa-whatsapp"></i>
+                WhatsApp
+            </a>
+
+            <a class="share-btn email"
+               href="mailto:?subject=File Download Link&body=Download here: {{ link }}">
+                <i class="fa-solid fa-envelope"></i>
+                Email
+            </a>
+
+            <a class="share-btn telegram"
+               href="https://t.me/share/url?url={{ link }}"
+               target="_blank">
+                <i class="fa-brands fa-telegram"></i>
+                Telegram
+            </a>
+
+            <a class="share-btn download"
+               href="{{ link }}"
+               target="_blank">
+                <i class="fa-solid fa-download"></i>
+                Download
+            </a>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+    <div class="bottom-text">
+        🔒 End-to-End Secure • ⚡ Fast Transfer • ☁ Cloud Storage
+    </div>
+
+</div>
+
+<script>
+
+    const fileInput = document.getElementById('fileInput');
+    const selectedFiles = document.getElementById('selectedFiles');
+
+    fileInput.addEventListener('change', () => {
+
+        selectedFiles.innerHTML = '';
+
+        [...fileInput.files].forEach(file => {
+
+            const size = (file.size / (1024 * 1024)).toFixed(2);
+
+            const div = document.createElement('div');
+
+            div.classList.add('file-item');
+
+            div.innerHTML = `
+                <span>
+                    <i class="fa-solid fa-file"></i>
+                    ${file.name}
+                </span>
+
+                <span>${size} MB</span>
+            `;
+
+            selectedFiles.appendChild(div);
+
+        });
+
+    });
+
+
+    // Fake Upload Progress Animation
+
+    const form = document.getElementById('uploadForm');
+    const progressWrapper = document.getElementById('progressWrapper');
+    const progressFill = document.getElementById('progressFill');
+    const progressPercent = document.getElementById('progressPercent');
+
+    form.addEventListener('submit', function(){
+
+        progressWrapper.style.display = 'block';
+
+        let progress = 0;
+
+        const interval = setInterval(() => {
+
+            progress += Math.floor(Math.random() * 8) + 1;
+
+            if(progress >= 100){
+                progress = 100;
+                clearInterval(interval);
+            }
+
+            progressFill.style.width = progress + '%';
+            progressPercent.innerText = progress + '%';
+
+        }, 180);
+
+    });
+
+
+    // Copy Link
+
+    function copyLink(){
+
+        const linkBox = document.getElementById('linkBox');
+
+        navigator.clipboard.writeText(linkBox.value);
+
+        const btn = document.querySelector('.copy-btn');
+
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
+
+        setTimeout(() => {
+            btn.innerHTML = '<i class="fa-solid fa-copy"></i> Copy';
+        }, 2000);
+
+    }
+
+</script>
 
 </body>
 </html>
+
