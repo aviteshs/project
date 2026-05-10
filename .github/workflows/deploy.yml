@@ -21,9 +21,6 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
 
         script: |
-          sudo docker stop mycontainer || true
-          sudo docker rm mycontainer || true
-
           rm -rf /home/ubuntu/project
 
           cd /home/ubuntu
@@ -32,6 +29,6 @@ jobs:
 
           cd /home/ubuntu/project
 
-          sudo docker build --no-cache -t myapp .
+          sudo docker compose down || true
 
-          sudo docker run -d -p 5000:5000 --name mycontainer myapp
+          sudo docker compose up -d --build
