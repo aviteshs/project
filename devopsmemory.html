@@ -1,285 +1,703 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DevOps Memory Dashboard</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Avitesh DevOps OS</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#020617;
+    color:white;
+    display:flex;
+    min-height:100vh;
+}
+
+.sidebar{
+    width:280px;
+    background:#0f172a;
+    border-right:1px solid rgba(255,255,255,0.08);
+    padding:25px;
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+    overflow-y:auto;
+}
+
+.logo{
+    font-size:28px;
+    font-weight:bold;
+    margin-bottom:30px;
+    color:#38bdf8;
+}
+
+.sidebar a{
+    display:block;
+    text-decoration:none;
+    color:#cbd5e1;
+    padding:14px 16px;
+    margin-bottom:10px;
+    border-radius:12px;
+    transition:.3s;
+}
+
+.sidebar a:hover{
+    background:#1e293b;
+    color:white;
+}
+
+.main{
+    margin-left:280px;
+    width:calc(100% - 280px);
+    padding:30px;
+}
+
+.hero{
+    background:linear-gradient(135deg,#2563eb,#7c3aed);
+    padding:35px;
+    border-radius:24px;
+    margin-bottom:25px;
+    box-shadow:0 10px 40px rgba(0,0,0,.35);
+}
+
+.hero h1{
+    font-size:42px;
+    margin-bottom:12px;
+}
+
+.hero p{
+    color:#e2e8f0;
+    line-height:1.6;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(350px,1fr));
+    gap:20px;
+}
+
+.card{
+    background:#0f172a;
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:20px;
+    padding:24px;
+    box-shadow:0 5px 25px rgba(0,0,0,.3);
+}
+
+.card h2{
+    margin-bottom:18px;
+    color:#4ade80;
+}
+
+.card h3{
+    margin-top:18px;
+    margin-bottom:10px;
+    color:#38bdf8;
+}
+
+textarea,
+input{
+    width:100%;
+    background:#020617;
+    border:1px solid rgba(255,255,255,0.08);
+    color:white;
+    padding:12px;
+    border-radius:12px;
+    margin-top:8px;
+    margin-bottom:15px;
+}
+
+textarea{
+    min-height:160px;
+    resize:vertical;
+}
+
+pre{
+    background:#020617;
+    padding:18px;
+    border-radius:16px;
+    overflow:auto;
+    margin-top:12px;
+    border:1px solid rgba(255,255,255,0.08);
+    color:#38bdf8;
+}
+
+.workflow{
+    background:#111827;
+    padding:20px;
+    border-radius:18px;
+    margin-top:18px;
+    line-height:2;
+    color:#facc15;
+}
+
+button{
+    padding:14px 24px;
+    border:none;
+    border-radius:14px;
+    background:#38bdf8;
+    color:black;
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:20px;
+}
+
+button:hover{
+    background:#0ea5e9;
+}
+
+.status{
+    margin-top:15px;
+    color:#4ade80;
+}
+
+@media(max-width:900px){
+
+    body{
+        display:block;
     }
 
-    body {
-      background: #0f172a;
-      color: white;
-      padding: 20px;
+    .sidebar{
+        position:relative;
+        width:100%;
+        height:auto;
     }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 25px;
-      color: #38bdf8;
+    .main{
+        margin-left:0;
+        width:100%;
     }
+}
 
-    .section {
-      background: #111827;
-      border: 1px solid #1e293b;
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.4);
-    }
-
-    .section h2 {
-      margin-bottom: 15px;
-      color: #4ade80;
-    }
-
-    .field {
-      margin-bottom: 12px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 5px;
-      color: #cbd5e1;
-      font-size: 14px;
-    }
-
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-      background: #1e293b;
-      color: white;
-    }
-
-    textarea {
-      min-height: 80px;
-      resize: vertical;
-    }
-
-    button {
-      margin-top: 10px;
-      padding: 10px 18px;
-      border: none;
-      border-radius: 8px;
-      background: #38bdf8;
-      color: black;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #0ea5e9;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-    }
-
-    .status {
-      margin-top: 10px;
-      color: #4ade80;
-      font-size: 14px;
-    }
-  </style>
+</style>
 </head>
 <body>
 
-  <h1>🚀 DevOps Memory Dashboard</h1>
+<div class="sidebar">
 
-  <div class="grid">
+    <div class="logo">🚀 DevOps OS</div>
 
-    <div class="section">
-      <h2>AWS</h2>
+    <a href="#overview">Overview</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#terraform">Terraform</a>
+    <a href="#docker">Docker</a>
+    <a href="#github">GitHub Actions</a>
+    <a href="#monitoring">Monitoring</a>
+    <a href="#workflow">Workflow</a>
+    <a href="#commands">Commands</a>
+    <a href="#project">Project Files</a>
+    <a href="#future">Future Roadmap</a>
 
-      <div class="field">
-        <label>Region</label>
-        <input id="aws_region" value="us-east-1" />
-      </div>
+</div>
 
-      <div class="field">
-        <label>Instance Type</label>
-        <input id="instance_type" value="t3.small" />
-      </div>
+<div class="main">
 
-      <div class="field">
-        <label>AMI ID</label>
-        <input id="ami_id" value="ami-091138d0f0d41ff90" />
-      </div>
+    <div class="hero" id="overview">
 
-      <div class="field">
-        <label>Security Ports</label>
-        <textarea id="ports">22 SSH
-80 Nginx
+        <h1>⚡ Avitesh DevOps Operating System</h1>
+
+        <p>
+            Complete personal DevOps memory system.
+            Infrastructure + CI/CD + Docker + Monitoring + Terraform + Flask Automation App.
+            Editable dashboard for future setup, cloning and deployment.
+        </p>
+
+    </div>
+
+
+    <div class="grid">
+
+        <div class="card">
+
+            <h2>🌍 AWS Infrastructure</h2>
+
+            <label>Region</label>
+            <input id="aws_region" value="us-east-1">
+
+            <label>Instance Type</label>
+            <input id="instance_type" value="t3.small">
+
+            <label>AMI</label>
+            <input id="ami_id" value="ami-091138d0f0d41ff90">
+
+            <label>Open Ports</label>
+            <textarea id="ports">22 SSH
+80 NGINX
 5000 Flask
 3000 Grafana
 9090 Prometheus
 9100 Node Exporter</textarea>
-      </div>
-    </div>
+
+        </div>
 
 
-    <div class="section">
-      <h2>Terraform</h2>
+        <div class="card" id="architecture">
 
-      <div class="field">
-        <label>Terraform Command</label>
-        <textarea id="terraform_cmd">terraform init
+            <h2>🏗 Architecture Flow</h2>
+
+            <div class="workflow">
+Internet
+↓
+NGINX :80
+↓
+Flask App :5000
+↓
+Docker Compose
+↓
+Prometheus :9090
+↓
+Grafana :3000
+↓
+Node Exporter :9100
+            </div>
+
+            <h3>CI/CD Flow</h3>
+
+            <div class="workflow">
+Git Push
+↓
+GitHub Actions
+↓
+SSH into EC2
+↓
+Git Pull
+↓
+Docker Compose Build
+↓
+Containers Restart
+            </div>
+
+        </div>
+
+
+        <div class="card" id="terraform">
+
+            <h2>🛠 Terraform Setup</h2>
+
+            <h3>Terraform Commands</h3>
+
+            <pre>terraform init
 terraform apply
-terraform destroy</textarea>
-      </div>
+terraform destroy</pre>
 
-      <div class="field">
-        <label>SSH Key Path</label>
-        <input id="ssh_key" value="~/.ssh/id_ed25519.pub" />
-      </div>
+            <h3>Terraform Workflow</h3>
 
-      <div class="field">
-        <label>Terraform Status</label>
-        <input id="terraform_status" value="Working" />
-      </div>
-    </div>
+            <pre>main.tf
+↓
+Terraform Apply
+↓
+EC2 Creation
+↓
+Security Groups
+↓
+Docker Installation
+↓
+Git Clone
+↓
+App Deployment</pre>
+
+            <h3>SSH Key Setup</h3>
+
+            <pre>resource "aws_key_pair" "generated_key" {
+  key_name = "devops-key2"
+  public_key = file("~/.ssh/id_ed25519.pub")
+}</pre>
+
+        </div>
 
 
-    <div class="section">
-      <h2>Docker</h2>
+        <div class="card" id="docker">
 
-      <div class="field">
-        <label>Compose Status</label>
-        <input id="compose_status" value="Working" />
-      </div>
+            <h2>🐳 Docker Stack</h2>
 
-      <div class="field">
-        <label>Containers</label>
-        <textarea id="containers">flaskapp
+            <h3>Containers</h3>
+
+            <textarea id="containers">flaskapp
+nginx
 prometheus
 grafana
-nginx
 node-exporter</textarea>
-      </div>
 
-      <div class="field">
-        <label>Useful Commands</label>
-        <textarea id="docker_cmds">docker ps
+            <h3>Docker Commands</h3>
+
+            <pre>docker ps
+
 docker compose up -d --build
+
 docker compose down
-docker compose logs</textarea>
-      </div>
-    </div>
+
+docker compose logs
+
+docker images</pre>
+
+            <h3>Docker Compose Workflow</h3>
+
+            <pre>docker-compose.yml
+↓
+Build Containers
+↓
+Create Network
+↓
+Expose Ports
+↓
+Monitoring Stack Live</pre>
+
+        </div>
 
 
-    <div class="section">
-      <h2>GitHub Actions</h2>
+        <div class="card" id="github">
 
-      <div class="field">
-        <label>Deploy Status</label>
-        <input id="deploy_status" value="Auto Deploy Working" />
-      </div>
+            <h2>⚡ GitHub Actions</h2>
 
-      <div class="field">
-        <label>Workflow File</label>
-        <input id="workflow_file" value=".github/workflows/deploy.yml" />
-      </div>
+            <h3>Secrets</h3>
 
-      <div class="field">
-        <label>Secrets</label>
-        <textarea id="github_secrets">HOST
+            <textarea id="secrets">HOST
 USERNAME
 SSH_KEY</textarea>
-      </div>
-    </div>
+
+            <h3>Deploy Workflow</h3>
+
+            <pre>git add .
+git commit -m "update"
+git push
+↓
+GitHub Actions Trigger
+↓
+SSH Server
+↓
+Git Pull
+↓
+Docker Compose Restart</pre>
+
+            <h3>Workflow File</h3>
+
+            <input id="workflow_file" value=".github/workflows/deploy.yml">
+
+        </div>
 
 
-    <div class="section">
-      <h2>Monitoring</h2>
+        <div class="card" id="monitoring">
 
-      <div class="field">
-        <label>Grafana URL</label>
-        <input id="grafana_url" value="http://SERVER-IP:3000" />
-      </div>
+            <h2>📊 Monitoring Stack</h2>
 
-      <div class="field">
-        <label>Prometheus URL</label>
-        <input id="prometheus_url" value="http://SERVER-IP:9090" />
-      </div>
+            <label>Grafana URL</label>
+            <input id="grafana_url" value="http://SERVER-IP:3000">
 
-      <div class="field">
-        <label>Dashboard ID</label>
-        <input id="dashboard_id" value="1860" />
-      </div>
+            <label>Prometheus URL</label>
+            <input id="prometheus_url" value="http://SERVER-IP:9090">
 
-      <div class="field">
-        <label>Monitoring Status</label>
-        <input id="monitor_status" value="Running" />
-      </div>
-    </div>
+            <label>Dashboard ID</label>
+            <input id="dashboard_id" value="1860">
+
+            <h3>Monitoring Flow</h3>
+
+            <pre>Node Exporter
+↓
+Prometheus Scraping
+↓
+Grafana Dashboard
+↓
+CPU / RAM / Disk / Network Metrics</pre>
+
+        </div>
 
 
-    <div class="section">
-      <h2>Next Steps</h2>
+        <div class="card" id="workflow">
 
-      <div class="field">
-        <label>Pending Tasks</label>
-        <textarea id="next_steps">HTTPS SSL
+            <h2>🧠 Full Workflow</h2>
+
+            <pre>1. Create Flask App
+2. Create Dockerfile
+3. Create Docker Compose
+4. Terraform EC2 Creation
+5. setup.sh Auto Install Docker
+6. GitHub Actions Setup
+7. Auto Deploy Working
+8. NGINX Reverse Proxy
+9. Prometheus Monitoring
+10. Grafana Dashboard
+11. Node Exporter Metrics
+12. Future Kubernetes</pre>
+
+        </div>
+
+
+        <div class="card" id="commands">
+
+            <h2>💻 Important Commands</h2>
+
+            <pre># SSH
+ssh ubuntu@SERVER-IP
+
+# Terraform
+terraform init
+terraform apply
+terraform destroy
+
+# Docker
+sudo docker ps
+sudo docker compose logs
+
+# Git
+git add .
+git commit -m "update"
+git push
+
+# Monitoring
+http://SERVER-IP:3000
+http://SERVER-IP:9090</pre>
+
+        </div>
+
+
+        <div class="card" id="project">
+
+            <h2>📂 Complete Project Files & Real Code</h2>
+
+            <h3>app.py</h3>
+
+            <pre>from flask import Flask, render_template, request
+import os
+from modules.bulk_extension_fix import run as bulk_run
+from flask import send_from_directory
+from modules.bulk_rename import run as rename_run
+from modules.video_downloader import run as video_run
+import json
+from datetime import datetime
+from modules.file_share import save_files
+
+app = Flask(__name__)
+
+UPLOAD_FOLDER = "uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+SHARE_FOLDER = "shared_files"
+os.makedirs(SHARE_FOLDER, exist_ok=True)</pre>
+
+            <h3>requirements.txt</h3>
+
+            <pre>Flask==3.1.2
+yt-dlp==2026.2.4
+Jinja2==3.1.6
+Werkzeug==3.1.5</pre>
+
+            <h3>setup.sh</h3>
+
+            <pre>apt update -y
+apt install -y docker-ce docker-compose-plugin git python3
+
+git clone https://github.com/aviteshs/project.git
+
+cd /project
+
+docker build -t myapp .
+
+docker run -d -p 5000:5000 --name mycontainer myapp</pre>
+
+            <h3>docker-compose.yml</h3>
+
+            <pre>version: '3'
+
+services:
+
+  flaskapp:
+    build: .
+    container_name: flaskapp
+    ports:
+      - "5000:5000"
+
+  nginx:
+    image: nginx
+    ports:
+      - "80:80"
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+
+  node-exporter:
+    image: prom/node-exporter
+    ports:
+      - "9100:9100"</pre>
+
+            <h3>main.tf</h3>
+
+            <pre>provider "aws" {
+  region = "us-east-1"
+}
+
+resource "aws_key_pair" "generated_key" {
+  key_name = "devops-key2"
+  public_key = file("~/.ssh/id_ed25519.pub")
+}
+
+resource "aws_instance" "web_server" {
+
+  ami           = "ami-091138d0f0d41ff90"
+  instance_type = "t3.small"
+
+  key_name = aws_key_pair.generated_key.key_name
+}</pre>
+
+            <h3>prometheus.yml</h3>
+
+            <pre>global:
+  scrape_interval: 15s
+
+scrape_configs:
+
+  - job_name: 'prometheus'
+
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'node-exporter'
+
+    static_configs:
+      - targets: ['node-exporter:9100']</pre>
+
+            <h3>deploy.yml</h3>
+
+            <pre>name: Auto Deploy Flask App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@master
+
+      with:
+        host: \${{ secrets.HOST }}
+        username: \${{ secrets.USERNAME }}
+        key: \${{ secrets.SSH_KEY }}
+
+        script: |
+          cd /home/ubuntu/project
+
+          git pull origin main
+
+          sudo docker compose down || true
+
+          sudo docker compose up -d --build</pre>
+
+            <h3>Project Structure</h3>
+
+            <pre>project/
+│
+├── app.py
+├── Dockerfile
+├── docker-compose.yml
+├── nginx.conf
+├── requirements.txt
+├── setup.sh
+│
+├── prometheus/
+│   └── prometheus.yml
+│
+├── terraform/
+│   └── main.tf
+│
+├── templates/
+│   ├── index.html
+│   ├── bulk.html
+│   ├── rename.html
+│   ├── share.html
+│   └── video.html
+│
+├── modules/
+│   ├── bulk_extension_fix.py
+│   ├── bulk_rename.py
+│   ├── file_share.py
+│   └── video_downloader.py</pre>
+
+        </div>
+
+
+        <div class="card" id="future">
+
+            <h2>🚀 Future Roadmap</h2>
+
+            <textarea id="future_data">HTTPS SSL
 Domain Setup
 Loki Logs
 Jenkins
 Kubernetes
-SonarQube</textarea>
-      </div>
+Helm
+ArgoCD
+SonarQube
+Trivy Security
+AWS ECS
+EKS
+Redis
+PostgreSQL
+Auto Scaling</textarea>
 
-      <div class="field">
-        <label>Notes</label>
-        <textarea id="notes">Everything automated using Terraform + GitHub Actions + Docker Compose.</textarea>
-      </div>
+        </div>
+
     </div>
 
-  </div>
 
-  <button onclick="saveData()">💾 Save Dashboard Data</button>
+    <button onclick="saveData()">💾 Save Everything</button>
 
-  <div class="status" id="status"></div>
+    <div class="status" id="status"></div>
 
-
-  <script>
-
-    function saveData() {
-
-      const inputs = document.querySelectorAll('input, textarea');
-
-      inputs.forEach(input => {
-        localStorage.setItem(input.id, input.value);
-      });
-
-      document.getElementById('status').innerText = '✅ Data Saved Successfully';
-    }
+</div>
 
 
-    function loadData() {
+<script>
 
-      const inputs = document.querySelectorAll('input, textarea');
+function saveData(){
 
-      inputs.forEach(input => {
+    const fields = document.querySelectorAll('input, textarea');
 
-        const saved = localStorage.getItem(input.id);
+    fields.forEach(field => {
+        localStorage.setItem(field.id, field.value);
+    });
 
-        if(saved !== null) {
-          input.value = saved;
+    document.getElementById('status').innerText = '✅ DevOps Memory Saved';
+}
+
+function loadData(){
+
+    const fields = document.querySelectorAll('input, textarea');
+
+    fields.forEach(field => {
+
+        const saved = localStorage.getItem(field.id);
+
+        if(saved !== null){
+            field.value = saved;
         }
-      });
-    }
+    });
+}
 
-    loadData();
+loadData();
 
-  </script>
+</script>
 
 </body>
 </html>
