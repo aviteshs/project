@@ -12,6 +12,3 @@ __pycache__/
 # App Data
 uploads/
 outputs/
-
-# Git
-.git/

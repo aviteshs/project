@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DevOps Memory Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #0f172a;
+      color: white;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #38bdf8;
+    }
+
+    .section {
+      background: #111827;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    }
+
+    .section h2 {
+      margin-bottom: 15px;
+      color: #4ade80;
+    }
+
+    .field {
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #cbd5e1;
+      font-size: 14px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      background: #1e293b;
+      color: white;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      background: #38bdf8;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0ea5e9;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .status {
+      margin-top: 10px;
+      color: #4ade80;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🚀 DevOps Memory Dashboard</h1>
+
+  <div class="grid">
+
+    <div class="section">
+      <h2>AWS</h2>
+
+      <div class="field">
+        <label>Region</label>
+        <input id="aws_region" value="us-east-1" />
+      </div>
+
+      <div class="field">
+        <label>Instance Type</label>
+        <input id="instance_type" value="t3.small" />
+      </div>
+
+      <div class="field">
+        <label>AMI ID</label>
+        <input id="ami_id" value="ami-091138d0f0d41ff90" />
+      </div>
+
+      <div class="field">
+        <label>Security Ports</label>
+        <textarea id="ports">22 SSH
+80 Nginx
+5000 Flask
+3000 Grafana
+9090 Prometheus
+9100 Node Exporter</textarea>
+      </div>
+    </div>
+
+
+    <div class="section">
+      <h2>Terraform</h2>
+
+      <div class="field">
+        <label>Terraform Command</label>
+        <textarea id="terraform_cmd">terraform init
+terraform apply
+terraform destroy</textarea>
+      </div>
+
+      <div class="field">
+        <label>SSH Key Path</label>
+        <input id="ssh_key" value="~/.ssh/id_ed25519.pub" />
+      </div>
+
+      <div class="field">
+        <label>Terraform Status</label>
+        <input id="terraform_status" value="Working" />
+      </div>
+    </div>
+
+
+    <div class="section">
+      <h2>Docker</h2>
+
+      <div class="field">
+        <label>Compose Status</label>
+        <input id="compose_status" value="Working" />
+      </div>
+
+      <div class="field">
+        <label>Containers</label>
+        <textarea id="containers">flaskapp
+prometheus
+grafana
+nginx
+node-exporter</textarea>
+      </div>
+
+      <div class="field">
+        <label>Useful Commands</label>
+        <textarea id="docker_cmds">docker ps
+docker compose up -d --build
+docker compose down
+docker compose logs</textarea>
+      </div>
+    </div>
+
+
+    <div class="section">
+      <h2>GitHub Actions</h2>
+
+      <div class="field">
+        <label>Deploy Status</label>
+        <input id="deploy_status" value="Auto Deploy Working" />
+      </div>
+
+      <div class="field">
+        <label>Workflow File</label>
+        <input id="workflow_file" value=".github/workflows/deploy.yml" />
+      </div>
+
+      <div class="field">
+        <label>Secrets</label>
+        <textarea id="github_secrets">HOST
+USERNAME
+SSH_KEY</textarea>
+      </div>
+    </div>
+
+
+    <div class="section">
+      <h2>Monitoring</h2>
+
+      <div class="field">
+        <label>Grafana URL</label>
+        <input id="grafana_url" value="http://SERVER-IP:3000" />
+      </div>
+
+      <div class="field">
+        <label>Prometheus URL</label>
+        <input id="prometheus_url" value="http://SERVER-IP:9090" />
+      </div>
+
+      <div class="field">
+        <label>Dashboard ID</label>
+        <input id="dashboard_id" value="1860" />
+      </div>
+
+      <div class="field">
+        <label>Monitoring Status</label>
+        <input id="monitor_status" value="Running" />
+      </div>
+    </div>
+
+
+    <div class="section">
+      <h2>Next Steps</h2>
+
+      <div class="field">
+        <label>Pending Tasks</label>
+        <textarea id="next_steps">HTTPS SSL
+Domain Setup
+Loki Logs
+Jenkins
+Kubernetes
+SonarQube</textarea>
+      </div>
+
+      <div class="field">
+        <label>Notes</label>
+        <textarea id="notes">Everything automated using Terraform + GitHub Actions + Docker Compose.</textarea>
+      </div>
+    </div>
+
+  </div>
+
+  <button onclick="saveData()">💾 Save Dashboard Data</button>
+
+  <div class="status" id="status"></div>
+
+
+  <script>
+
+    function saveData() {
+
+      const inputs = document.querySelectorAll('input, textarea');
+
+      inputs.forEach(input => {
+        localStorage.setItem(input.id, input.value);
+      });
+
+      document.getElementById('status').innerText = '✅ Data Saved Successfully';
+    }
+
+
+    function loadData() {
+
+      const inputs = document.querySelectorAll('input, textarea');
+
+      inputs.forEach(input => {
+
+        const saved = localStorage.getItem(input.id);
+
+        if(saved !== null) {
+          input.value = saved;
+        }
+      });
+    }
+
+    loadData();
+
+  </script>
+
+</body>
+</html>
