@@ -21,13 +21,18 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
 
         script: |
-          rm -rf /home/ubuntu/project
 
-          cd /home/ubuntu
+          if [ ! -d "/project" ]; then
+
+            cd /
+
+            sudo git clone https://github.com/aviteshs/project.git
+
+          fi
+
+          cd /project
 
           sudo git pull origin main
-
-          cd /home/ubuntu/project
 
           sudo docker compose down || true
 
