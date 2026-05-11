@@ -99,7 +99,25 @@ services:
       - monitoring
 
     restart: always  
+    
+  promtail:
+
+    image: grafana/promtail
+
+    container_name: promtail
+
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - ./promtail/config.yml:/etc/promtail/config.yml
+
+    command: -config.file=/etc/promtail/config.yml
+
+    networks:
+      - monitoring
+
+    restart: always 
+    
  
- networks:
+networks:
 
   monitoring:
