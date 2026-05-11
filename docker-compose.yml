@@ -10,6 +10,9 @@ services:
 
     ports:
       - "5000:5000"
+      
+    networks:
+      - monitoring  
 
     restart: always
 
@@ -24,6 +27,9 @@ services:
 
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      
+    networks:
+      - monitoring  
 
     restart: always
 
@@ -35,6 +41,9 @@ services:
 
     ports:
       - "3000:3000"
+    
+    networks:
+      - monitoring    
 
     restart: always
     
@@ -46,8 +55,12 @@ services:
 
     ports:
       - "9100:9100"
+      
+    networks:
+      - monitoring
 
     restart: always  
+    
   nginx:
 
     image: nginx
@@ -62,6 +75,9 @@ services:
 
     depends_on:
       - flaskapp
+    
+    networks:
+      - monitoring    
 
     restart: always 
     
@@ -78,5 +94,12 @@ services:
       - ./loki/config.yml:/etc/loki/config.yml
 
     command: -config.file=/etc/loki/config.yml
+    
+    networks:
+      - monitoring
 
     restart: always  
+ 
+ networks:
+
+  monitoring:
