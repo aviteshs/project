@@ -64,3 +64,19 @@ services:
       - flaskapp
 
     restart: always 
+    
+  loki:
+
+    image: grafana/loki
+
+    container_name: loki
+
+    ports:
+      - "3100:3100"
+
+    volumes:
+      - ./loki/config.yml:/etc/loki/config.yml
+
+    command: -config.file=/etc/loki/config.yml
+
+    restart: always  
