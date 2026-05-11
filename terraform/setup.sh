@@ -65,10 +65,4 @@ cd /project
 # Build Docker Image
 # -----------------------------
 
-docker build -t myapp .
-
-# -----------------------------
-# Run Container
-# -----------------------------
-
-docker run -d -p 5000:5000 --name mycontainer myapp
+docker compose up -d --build
