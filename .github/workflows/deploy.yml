@@ -25,7 +25,7 @@ jobs:
 
           cd /home/ubuntu
 
-          git clone https://github.com/aviteshs/project.git
+          sudo git pull origin main
 
           cd /home/ubuntu/project
 
